@@ -1,0 +1,25 @@
+#well_options {
+    text: grey;
+}
+
+/* .jumbotron {
+    background-color: rgba(0,0,0,0);
+    background-color:rgb(104, 62, 1);
+    height: 80%;
+    position: relative;
+
+}  */
+
+/* .panel-heading {
+    background-color:rgb(138, 83, 0);
+} */
+
+/* .footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+} */
+
+select:focus > option:checked { 
+    background: rgba(0,255,0,0) !important;
+}
