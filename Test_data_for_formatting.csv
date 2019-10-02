@@ -1,0 +1,17 @@
+League,Team,Altitude,Win_Pct,Home_Win_Pct,Similar_Opp_Home
+NBA,Denver Nuggets,5300,0.4227,0.5669,0.5212
+NBA,Utah Jazz,4200,0.5188,0.4324,0.4422
+NBA,Orlando Magic,60,0.4337,0.4260,0.6943
+NBA,Miami Heat,5,0.5836,0.4538,0.6265
+MLB,Colorado Rockies,5211,0.4550,0.6128,0.4430
+MLB,San Diego Padres,14,0.4471,0.4994,0.6799
+MLB,Atlanta Braves,939,0.6762,0.6327,0.6163
+MLB,New York Mets,14,0.6693,0.6422,0.5386
+NFL,Buffalo Bills,866,0.4743,0.4261,0.5883
+NFL,Miami Dolphins,10,0.6903,0.4914,0.4030
+NFL,Arizona Cardinals,1070,0.6101,0.6848,0.6556
+NFL,Denver Broncos,5280,0.5840,0.6172,0.6702
+NHL,Colorado Avalanche,5191,0.6333,0.5575,0.4321
+NHL,Calgary Flames,3425,0.5554,0.4544,0.6396
+NHL,Tampa Bay Lightning,14,0.4376,0.5860,0.6819
+NHL,Winnipeg Jets,762,0.6603,0.4589,0.5053
