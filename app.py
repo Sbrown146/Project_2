@@ -19,17 +19,18 @@ app = Flask(__name__)
 
 
 # add route to database
-engine=create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/Legends_Temple_Runs")
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://postgres:postgres@localhost:5432/Legends_Temple_Runs"
+#engine=create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/Project_2_Test")
+#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://postgres:postgres@localhost:5432/Project_2_Test"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Test_data.sqlite"
 db = SQLAlchemy(app)
 
 Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 
-inspector = inspect(engine)
+inspector = inspect(db.engine)
 tables=inspector.get_table_names()
 
-# This works with sqlite but now with postgres
+# This works with sqlite but not with postgres
 
 # Samples_Metadata = Base.classes.sample_metadata
 # Samples = Base.classes.samples
@@ -40,103 +41,238 @@ tables=inspector.get_table_names()
 def index():
     return render_template("index.html")
 
-# Fetch all data here for page start up
+# Fetch all data here if needed for page start up.  table[0] references the first and only dataset in the database through the inspector.
 @app.route("/sport")
 def sport():
 
-    conn = engine.connect()
-    Temple_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
-#     Temple_data = {
-#     "episode": Temple_data_conn.episode.values.tolist(),
-#     "season": Temple_data_conn.season.values.tolist(),
-#     "name": Temple_data_conn.name.values.tolist(),
-#     "team": Temple_data_conn.team.values.tolist(),
-#     "temple_layout": Temple_data_conn.temple_layout.values.tolist(),
-#     "artifact_location": Temple_data_conn.artifact_location.values.tolist(),
-#     "artifact_found": Temple_data_conn.artifact_found.values.tolist(),
-#     "failure_due_to": Temple_data_conn.failure_due_to.values.tolist(),
-#     "success": Temple_data_conn.success.values.tolist(),
-#     "solo": Temple_data_conn.solo.values.tolist(),
-#     "time_left": Temple_data_conn.time_left.values.tolist(),
-#     "pendants": Temple_data_conn.pendants.values.tolist(),
-#     "pen_dummy": Temple_data_conn.pen_dummy.values.tolist(),
-# }
+    conn = db.engine.connect()
+    Test_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
+    Test_data = {
+    "league": Test_data_conn.league.values.tolist(),
+    "team": Test_data_conn.team.values.tolist(),
+    "altitude": Test_data_conn.altitude.values.tolist(),
+    "win_pct_1": Test_data_conn.win_pct_1.values.tolist(),
+    "home_win_pct_1": Test_data_conn.home_win_pct_1.values.tolist(),
+    "similar_opp_home_1": Test_data_conn.similar_opp_home_1.values.tolist(),
+    "win_pct_2": Test_data_conn.win_pct_2.values.tolist(),
+    "home_win_pct_2": Test_data_conn.home_win_pct_2.values.tolist(),
+    "similar_opp_home_2": Test_data_conn.similar_opp_home_2.values.tolist(),
+    "win_pct_3": Test_data_conn.win_pct_3.values.tolist(),
+    "home_win_pct_3": Test_data_conn.home_win_pct_3.values.tolist(),
+    "similar_opp_home_3": Test_data_conn.similar_opp_home_3.values.tolist(),
+    "win_pct_4": Test_data_conn.win_pct_4.values.tolist(),
+    "home_win_pct_4": Test_data_conn.home_win_pct_4.values.tolist(),
+    "similar_opp_home_4": Test_data_conn.similar_opp_home_4.values.tolist(),
+    "win_pct_5": Test_data_conn.win_pct_5.values.tolist(),
+    "home_win_pct_5": Test_data_conn.home_win_pct_5.values.tolist(),
+    "similar_opp_home_5": Test_data_conn.similar_opp_home_5.values.tolist(),
+}
 
-    # return (Temple_data)
+    return jsonify(Test_data)
 
-# Default route to pick league
-@app.route("/default")
-def default():
+# Fetch the list of leagues for the league dropdown menu
+@app.route("/league")
+def league():
 
-    League_choice=["NFL", "NBA", "MLB", "NHL"]
-    League_list=list(np.ravel(League_choice))
+    conn = db.engine.connect()
+    League_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
+    League_list=League_data_conn.league.unique()
+    League_list=list(np.ravel(League_list))
 
     return jsonify(League_list)
 
-# Have routes to fetch team names for all 4 sport leagues
+# Gets stats for each team
+@app.route("/league/<team>")
+def team_metadata(team):
+
+    conn = db.engine.connect()
+    Test_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} WHERE team='{team}'", conn)
+    Team_data = {
+    "league": Test_data_conn.league.values.tolist(),
+    "team": Test_data_conn.team.values.tolist(),
+    "altitude": Test_data_conn.altitude.values.tolist(),
+    "win_pct_1": Test_data_conn.win_pct_1.values.tolist(),
+    "home_win_pct_1": Test_data_conn.home_win_pct_1.values.tolist(),
+    "similar_opp_home_1": Test_data_conn.similar_opp_home_1.values.tolist(),
+    "win_pct_2": Test_data_conn.win_pct_2.values.tolist(),
+    "home_win_pct_2": Test_data_conn.home_win_pct_2.values.tolist(),
+    "similar_opp_home_2": Test_data_conn.similar_opp_home_2.values.tolist(),
+    "win_pct_3": Test_data_conn.win_pct_3.values.tolist(),
+    "home_win_pct_3": Test_data_conn.home_win_pct_3.values.tolist(),
+    "similar_opp_home_3": Test_data_conn.similar_opp_home_3.values.tolist(),
+    "win_pct_4": Test_data_conn.win_pct_4.values.tolist(),
+    "home_win_pct_4": Test_data_conn.home_win_pct_4.values.tolist(),
+    "similar_opp_home_4": Test_data_conn.similar_opp_home_4.values.tolist(),
+    "win_pct_5": Test_data_conn.win_pct_5.values.tolist(),
+    "home_win_pct_5": Test_data_conn.home_win_pct_5.values.tolist(),
+    "similar_opp_home_5": Test_data_conn.similar_opp_home_5.values.tolist(),
+}
+
+    return jsonify(Team_data)
+
+# Fetch list of nba teams for dropdown menu
+@app.route("/nba")
+def nba():
+
+    conn = db.engine.connect()
+    League_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='NBA'", conn)
+    Nba_list=League_data_conn.team
+    Nba_list=sorted(Nba_list)
+    Nba_list=list(np.ravel(Nba_list))
+
+    return jsonify(Nba_list)
+
+# Fetches data for nba teams
+@app.route("/nba_data")
+def nba_data():
+
+    conn = db.engine.connect()
+    Test_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='NBA'", conn)
+    Nba_data = {
+    "league": Test_data_conn.league.values.tolist(),
+    "team": Test_data_conn.team.values.tolist(),
+    "altitude": Test_data_conn.altitude.values.tolist(),
+    "win_pct_1": Test_data_conn.win_pct_1.values.tolist(),
+    "home_win_pct_1": Test_data_conn.home_win_pct_1.values.tolist(),
+    "similar_opp_home_1": Test_data_conn.similar_opp_home_1.values.tolist(),
+    "win_pct_2": Test_data_conn.win_pct_2.values.tolist(),
+    "home_win_pct_2": Test_data_conn.home_win_pct_2.values.tolist(),
+    "similar_opp_home_2": Test_data_conn.similar_opp_home_2.values.tolist(),
+    "win_pct_3": Test_data_conn.win_pct_3.values.tolist(),
+    "home_win_pct_3": Test_data_conn.home_win_pct_3.values.tolist(),
+    "similar_opp_home_3": Test_data_conn.similar_opp_home_3.values.tolist(),
+    "win_pct_4": Test_data_conn.win_pct_4.values.tolist(),
+    "home_win_pct_4": Test_data_conn.home_win_pct_4.values.tolist(),
+    "similar_opp_home_4": Test_data_conn.similar_opp_home_4.values.tolist(),
+    "win_pct_5": Test_data_conn.win_pct_5.values.tolist(),
+    "home_win_pct_5": Test_data_conn.home_win_pct_5.values.tolist(),
+    "similar_opp_home_5": Test_data_conn.similar_opp_home_5.values.tolist(),
+}
+
+    return jsonify(Nba_data)
+
+# Fetch list of nfl teams for dropdown menu
 @app.route("/nfl")
 def nfl():
 
-    conn = engine.connect()
-    Nfl_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
-    Nfl_list=Nfl_data_conn.{columns with nfl team names}.unique()
+    conn = db.engine.connect()
+    League_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='NFL'", conn)
+    Nfl_list=League_data_conn.team
+    Nfl_list=sorted(Nfl_list)
     Nfl_list=list(np.ravel(Nfl_list))
 
     return jsonify(Nfl_list)
 
-@app.route("/nba")
-def nba():
+# Fetches data for nfl teams
+@app.route("/nfl_data")
+def nfl_data():
 
-    conn = engine.connect()
-    Nba_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
-    Nba_list=Nba_data_conn.{columns with nba team names}.unique()
-    Nba_list=list(np.ravel(Nba_list))
+    conn = db.engine.connect()
+    Test_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='NFL'", conn)
+    Nfl_data = {
+    "league": Test_data_conn.league.values.tolist(),
+    "team": Test_data_conn.team.values.tolist(),
+    "altitude": Test_data_conn.altitude.values.tolist(),
+    "win_pct_1": Test_data_conn.win_pct_1.values.tolist(),
+    "home_win_pct_1": Test_data_conn.home_win_pct_1.values.tolist(),
+    "similar_opp_home_1": Test_data_conn.similar_opp_home_1.values.tolist(),
+    "win_pct_2": Test_data_conn.win_pct_2.values.tolist(),
+    "home_win_pct_2": Test_data_conn.home_win_pct_2.values.tolist(),
+    "similar_opp_home_2": Test_data_conn.similar_opp_home_2.values.tolist(),
+    "win_pct_3": Test_data_conn.win_pct_3.values.tolist(),
+    "home_win_pct_3": Test_data_conn.home_win_pct_3.values.tolist(),
+    "similar_opp_home_3": Test_data_conn.similar_opp_home_3.values.tolist(),
+    "win_pct_4": Test_data_conn.win_pct_4.values.tolist(),
+    "home_win_pct_4": Test_data_conn.home_win_pct_4.values.tolist(),
+    "similar_opp_home_4": Test_data_conn.similar_opp_home_4.values.tolist(),
+    "win_pct_5": Test_data_conn.win_pct_5.values.tolist(),
+    "home_win_pct_5": Test_data_conn.home_win_pct_5.values.tolist(),
+    "similar_opp_home_5": Test_data_conn.similar_opp_home_5.values.tolist(),
+}
 
-    return jsonify(Nba_list)
-    
+    return jsonify(Nfl_data)
+
+# Fetch list of mlb teams for dropdown menu
 @app.route("/mlb")
 def mlb():
 
-    conn = engine.connect()
-    Mlb_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
-    Mlb_list=Mlb_data_conn.{columns with mlb team names}.unique()
+    conn = db.engine.connect()
+    League_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='MLB'", conn)
+    Mlb_list=League_data_conn.team
+    Mlb_list=sorted(Mlb_list)
     Mlb_list=list(np.ravel(Mlb_list))
 
     return jsonify(Mlb_list)
 
+# Fetches data for mlb teams
+@app.route("/mlb_data")
+def mlb_data():
+
+    conn = db.engine.connect()
+    Test_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='MLB'", conn)
+    Mlb_data = {
+    "league": Test_data_conn.league.values.tolist(),
+    "team": Test_data_conn.team.values.tolist(),
+    "altitude": Test_data_conn.altitude.values.tolist(),
+    "win_pct_1": Test_data_conn.win_pct_1.values.tolist(),
+    "home_win_pct_1": Test_data_conn.home_win_pct_1.values.tolist(),
+    "similar_opp_home_1": Test_data_conn.similar_opp_home_1.values.tolist(),
+    "win_pct_2": Test_data_conn.win_pct_2.values.tolist(),
+    "home_win_pct_2": Test_data_conn.home_win_pct_2.values.tolist(),
+    "similar_opp_home_2": Test_data_conn.similar_opp_home_2.values.tolist(),
+    "win_pct_3": Test_data_conn.win_pct_3.values.tolist(),
+    "home_win_pct_3": Test_data_conn.home_win_pct_3.values.tolist(),
+    "similar_opp_home_3": Test_data_conn.similar_opp_home_3.values.tolist(),
+    "win_pct_4": Test_data_conn.win_pct_4.values.tolist(),
+    "home_win_pct_4": Test_data_conn.home_win_pct_4.values.tolist(),
+    "similar_opp_home_4": Test_data_conn.similar_opp_home_4.values.tolist(),
+    "win_pct_5": Test_data_conn.win_pct_5.values.tolist(),
+    "home_win_pct_5": Test_data_conn.home_win_pct_5.values.tolist(),
+    "similar_opp_home_5": Test_data_conn.similar_opp_home_5.values.tolist(),
+}
+
+    return jsonify(Mlb_data)
+
+# Fetch list of nhl teams for dropdown menu
 @app.route("/nhl")
 def nhl():
 
-    conn = engine.connect()
-    Nhl_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
-    Nhl_list=Nhl_data_conn.{columns with nhl team names}.unique()
+    conn = db.engine.connect()
+    League_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='NHL'", conn)
+    Nhl_list=League_data_conn.team
+    Nhl_list=sorted(Nhl_list)
     Nhl_list=list(np.ravel(Nhl_list))
 
     return jsonify(Nhl_list)
 
-# Example route for specific nfl team
-@app.route("/nfl/<nfl>")
-def nfl_metadata(nfl):
+# Fetches data for nhl teams
+@app.route("/nhl_data")
+def nhl_data():
 
-    conn = engine.connect()
-    Season_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} WHERE nfl='{nfl}'", conn)
-    Season_data = {
-    "episode": Season_data_conn.episode.values.tolist(),
-    "season": Season_data_conn.season.values.tolist(),
-    "name": Season_data_conn.name.values.tolist(),
-    "team": Season_data_conn.team.values.tolist(),
-    "temple_layout": Season_data_conn.temple_layout.values.tolist(),
-    "artifact_location": Season_data_conn.artifact_location.values.tolist(),
-    "artifact_found": Season_data_conn.artifact_found.values.tolist(),
-    "failure_due_to": Season_data_conn.failure_due_to.values.tolist(),
-    "success": Season_data_conn.success.values.tolist(),
-    "solo": Season_data_conn.solo.values.tolist(),
-    "time_left": Season_data_conn.time_left.values.tolist(),
-    "pendants": Season_data_conn.pendants.values.tolist(),
-    "pen_dummy": Season_data_conn.pen_dummy.values.tolist(),
+    conn = db.engine.connect()
+    Test_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]} where league='NHL'", conn)
+    Nhl_data = {
+    "league": Test_data_conn.league.values.tolist(),
+    "team": Test_data_conn.team.values.tolist(),
+    "altitude": Test_data_conn.altitude.values.tolist(),
+    "win_pct_1": Test_data_conn.win_pct_1.values.tolist(),
+    "home_win_pct_1": Test_data_conn.home_win_pct_1.values.tolist(),
+    "similar_opp_home_1": Test_data_conn.similar_opp_home_1.values.tolist(),
+    "win_pct_2": Test_data_conn.win_pct_2.values.tolist(),
+    "home_win_pct_2": Test_data_conn.home_win_pct_2.values.tolist(),
+    "similar_opp_home_2": Test_data_conn.similar_opp_home_2.values.tolist(),
+    "win_pct_3": Test_data_conn.win_pct_3.values.tolist(),
+    "home_win_pct_3": Test_data_conn.home_win_pct_3.values.tolist(),
+    "similar_opp_home_3": Test_data_conn.similar_opp_home_3.values.tolist(),
+    "win_pct_4": Test_data_conn.win_pct_4.values.tolist(),
+    "home_win_pct_4": Test_data_conn.home_win_pct_4.values.tolist(),
+    "similar_opp_home_4": Test_data_conn.similar_opp_home_4.values.tolist(),
+    "win_pct_5": Test_data_conn.win_pct_5.values.tolist(),
+    "home_win_pct_5": Test_data_conn.home_win_pct_5.values.tolist(),
+    "similar_opp_home_5": Test_data_conn.similar_opp_home_5.values.tolist(),
 }
 
-    return (Season_data)
+    return jsonify(Nhl_data)
 
 
 if __name__ == "__main__":

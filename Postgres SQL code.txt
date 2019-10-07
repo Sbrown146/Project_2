@@ -1,0 +1,20 @@
+create table test_data (
+	league varchar,
+	team varchar,
+	altitude float,
+	win_pct_1 float,
+	home_win_pct_1 float,
+	similar_opp_home_1 float,
+	win_pct_2 float,
+	home_win_pct_2 float,
+	similar_opp_home_2 float,
+	win_pct_3 float,
+	home_win_pct_3 float,
+	similar_opp_home_3 float,
+	win_pct_4 float,
+	home_win_pct_4 float,
+	similar_opp_home_4 float,
+	win_pct_5 float,
+	home_win_pct_5 float,
+	similar_opp_home_5 float
+);
