@@ -19,8 +19,8 @@ app = Flask(__name__)
 
 
 # add route to database
-engine=create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/Legends_Temple_Runs")
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://postgres:postgres@localhost:5432/Legends_Temple_Runs"
+engine=create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/Sports")
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://postgres:postgres@localhost:5432/Sports"
 db = SQLAlchemy(app)
 
 Base = automap_base()
@@ -46,24 +46,7 @@ def sport():
 
     conn = engine.connect()
     Temple_data_conn=pd.read_sql(f"SELECT * FROM {tables[0]}", conn)
-#     Temple_data = {
-#     "episode": Temple_data_conn.episode.values.tolist(),
-#     "season": Temple_data_conn.season.values.tolist(),
-#     "name": Temple_data_conn.name.values.tolist(),
-#     "team": Temple_data_conn.team.values.tolist(),
-#     "temple_layout": Temple_data_conn.temple_layout.values.tolist(),
-#     "artifact_location": Temple_data_conn.artifact_location.values.tolist(),
-#     "artifact_found": Temple_data_conn.artifact_found.values.tolist(),
-#     "failure_due_to": Temple_data_conn.failure_due_to.values.tolist(),
-#     "success": Temple_data_conn.success.values.tolist(),
-#     "solo": Temple_data_conn.solo.values.tolist(),
-#     "time_left": Temple_data_conn.time_left.values.tolist(),
-#     "pendants": Temple_data_conn.pendants.values.tolist(),
-#     "pen_dummy": Temple_data_conn.pen_dummy.values.tolist(),
-# }
-
-    # return (Temple_data)
-
+    
 # Default route to pick league
 @app.route("/default")
 def default():
