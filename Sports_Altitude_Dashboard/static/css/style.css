@@ -45,3 +45,20 @@ h1 {
 .alert {
   background-color: rgb(73, 116, 172);
 }
+
+.Legend {
+  padding: 10px 12px;
+  color: black;
+  background: white;
+  border-radius: 6px;
+}
+
+.Legend j {
+  width: 15px;
+  height: 15px;
+  float: left;
+}
+
+a:hover {
+  background-color: white;
+}

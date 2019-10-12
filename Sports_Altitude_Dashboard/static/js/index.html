@@ -15,7 +15,7 @@
   <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
   integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
   crossorigin=""></script>
-  <link rel="stylesheet" type="text/css" href="static/css/style.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body data-ng-controller="MapCtrl">
@@ -29,7 +29,12 @@
         <div class="col-md-3">
           <div class="well" style="background-color:rgb(73, 116, 172);">
             <h4>Select a League:</h4>
-            <select id="League_select" onchange="option_League(this.value)" style="width:100%; color:grey;"></select>
+            <select id="League_select" onchange="option_League(this.value)" style="width:100%; color:grey;">
+                <option value="NFL">NFL</option>
+                <option value="NBA">NBA</option>
+                <option value="NHL">NHL</option>
+                <option value="MLB">MLB</option>
+              </select>
             <h4>Select Team:</h4>
             <select id="Team_select" onchange="option_Team(this.value)" style="width:100%; color:grey;"></select>
           </div>
@@ -95,7 +100,7 @@
             <!-- <div class="alert alert-info">Altitude</div> -->
                 <p>There have been several studies that suggest that athletics who consistently train at high altitudes have an advantage over those who do not due to an increased erythropoietin (EPO) affect that last for 10 to 20 days after training at high altitudes.</p>
                 <p>Further information on Athletic Performance and Elevation:</p>
-                <a href="https://www.livescience.com/32750-why-do-athletes-train-at-high-altitudes.html">Live Science article regarding athletics and high altitude</a></br>
+                <a target="_blank" rel="noopener noreferrer" href="https://www.livescience.com/32750-why-do-athletes-train-at-high-altitudes.html">Live Science article regarding athletics and high altitude</a></br>
                 <a href="http://www.canberra.edu.au/researchrepository/file/0ec194b7-4e67-bbaa-bb32-0f0dc6eaab4b/1/full_text.pdf">Case study on the physiological and performance effects of altitude training and exposure in elite athletes from the University of Canberra</a>
               </div>
             <div role="tabpanel" class="tab-pane fade" id="random">
@@ -108,6 +113,7 @@
             <div role="tabpanel" class="tab-pane fade" id="sim">
               <p>Monte Carlo simulation is used for the simulation probability of a team winning at home against an opponent with a similar record.  Football can be used to describe the simulation process:</p></br>
               <p>Lets say that a football team plays 8 home games of which 5 are against opponents with a comparable record.  Their winning percentage over those 5 games are taken and simulated over a specific period (5 seasons in the above data so 25 total games).  This process is then repeated 10,000 times to get summary statistics for what the probability variance should be.</p>
+              <img src="MC_pic.png" height="250" width="1130" class="pic"> </br>
               <a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">More about Monte Carlo Simulation from the most reliable source on the internet</a>
               <!-- <div class="alert alert-info">Sim</div> -->
             </div>
@@ -122,7 +128,7 @@
     </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script type="text/javascript" src="static/js/config.js"></script>
-  <script type="text/javascript" src="static/js/app.js"></script>
+  <script type="text/javascript" src="config.js"></script>
+  <script type="text/javascript" src="logic.js"></script>
 
 </html>

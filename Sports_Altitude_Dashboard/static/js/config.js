@@ -1,0 +1,6 @@
+// API key
+const API_KEY = "pk.eyJ1Ijoic2Jyb3duMTQ2IiwiYSI6ImNrMWUycThmajBhZzIzYm11bjRqMDRvamQifQ.M22-sX0fWx_QGYGZQpRDGw";
+const API_KEY_NFL = "69f17d50cebe453f802706181a4d33b0";
+const API_KEY_MLB = "96bd58dc56684c418ee3b279caaf634e";
+const API_KEY_NBA = "347c7cf39a8b4f58906ce63f2ac52906";
+const API_KEY_NHL = "58e0c90ff51242fba96ca913e355a656";

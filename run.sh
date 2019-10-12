@@ -1,0 +1,1 @@
+FLASK_APP=Sports_Altitude_Dashboard/app.py flask run
