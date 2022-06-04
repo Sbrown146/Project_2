@@ -1,4 +1,5 @@
 import os
+from socket import create_server
 import pandas as pd
 import numpy as np
 
@@ -11,6 +12,7 @@ from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy.ext.declarative import declarative_base
+# from waitress import serve
 
 import json
 
@@ -22,6 +24,9 @@ app = Flask(__name__)
 #engine=create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/Project_2_Test")
 #app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://postgres:postgres@localhost:5432/Project_2_Test"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Test_data.sqlite"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.debug = False
+
 db = SQLAlchemy(app)
 
 Base = automap_base()
@@ -277,3 +282,6 @@ def nhl_data():
 
 if __name__ == "__main__":
     app.run()
+    # serve(app.run(), host="0.0.0.0", port=8080)
+    # server = create_server(app)
+    # server.run()

@@ -6,7 +6,7 @@
 
 // Global Declarations
 
-// These store simulated home win % for each league
+// These store simulazxted home win % for each league
 var NBA_array=[];
 var MLB_array=[];
 var NFL_array=[];
@@ -32,12 +32,15 @@ let League_map = L.map("map", {
   zoom: 4.45,
 });
 
+//Updated API as classic style for leaflet within mapbox was deprecated as of 2020
+
 // The tilelayer is set so that it will remain as the layers for each league are removed and added back.
-var tileLayer = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+var tileLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
   maxZoom: 18,
   // id: "mapbox.streets-basic",
-  id: "mapbox.outdoors",
+  // id: "mapbox.outdoors",
+  id: 'mapbox/outdoors-v11',
   accessToken: API_KEY
 }).addTo(League_map);
 
@@ -230,7 +233,7 @@ function init_team(index_0) {
     // Adds team data to the panels
     d3.select(".panel-title").text(`Stats for: ${data.team}`);
     d3.select("#option-data").append("h5").text(`League: ${data.league}`);
-    d3.select("#option-data").append("h5").text(`Altitude: ${data.altitude} feet`);
+    d3.select("#option-data").append("h5").text(`Altitude: ${data.altitude} ft`);
     d3.select("#option-data").append("h5").text(`Win Pct: ${((team_wins)*100).toFixed(2)}%`);
     d3.select("#option-data").append("h5").text(`Home Win Pct: ${((team_home_wins)*100).toFixed(2)}%`);
 
@@ -239,25 +242,25 @@ function init_team(index_0) {
     if (league_set=="NBA") {
       // sim_ref = NBA_mc_ref[0].team.indexOf(index_0);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((NBA_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NBA_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NBA_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(NBA_array, NBA_altitude)).toFixed(2)}`);
     }
     else if (league_set=="NFL") {
       // sim_ref = NFL_mc_ref[0].team.indexOf(index_0);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((NFL_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NFL_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NFL_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(NFL_array, NFL_altitude)).toFixed(2)}`);
     }
     else if (league_set=="MLB") {
       // sim_ref = MLB_mc_ref[0].team.indexOf(index_0);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((MLB_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((MLB_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((MLB_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(MLB_array, MLB_altitude)).toFixed(2)}`);
     }
     else {
       // sim_ref = NHL_mc_ref[0].team.indexOf(index_0);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((NHL_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NHL_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NHL_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(NHL_array, NHL_altitude)).toFixed(2)}`);
     };
 
@@ -341,8 +344,8 @@ function nba_graphs() {
         eval("Team_win_array.push(Team_win_array"+i+".toFixed(4))");
         eval("var mc"+i+"=monteCarlo(10000, Team_win_array"+i+", 41)");
         eval("NBA_mc_array.push(mc"+i+".Results)");
-        eval("mc_mean.push(mc"+i+".Mean)");
-        eval("mc_std.push((mc"+i+".Std.toFixed(4))*1.96)");
+        eval("mc_mean.push(mc"+i+".Mean.toFixed(3))");
+        eval("mc_std.push(((mc"+i+".Std.toFixed(4))*1.96).toFixed(3))");
         // eval("NBA_array.push(Team_win_array"+i+")");
         eval("NBA_array.push(mc"+i+".Mean)");
         eval("NBA_altitude.push(data.altitude["+i+"]*1)");
@@ -357,7 +360,7 @@ function nba_graphs() {
     };
     
     // Error Plot
-
+    
     let data_error = [
       {
         x: mc_mean,
@@ -376,7 +379,7 @@ function nba_graphs() {
     let nba_box_layout = {
       showlegend: false,
       range: [0.4, 0.75],
-      title: 'Simulated Home Win % Confidence Intervals',
+      title: 'Simulated Home Win % Confidence Intervals <br> 2008 - 2015 Seasons',
       margin: {
         l: 150,
         r: 50,
@@ -409,12 +412,12 @@ function nba_graphs() {
       mode: 'markers',
       type: 'scatter'
     };
-
+    
     var nba_graph_data = [nba_opp_home_trace];
 
     var layout_nba={
       title: { 
-        text: `NBA Home Win % vs Altitude`,
+        text: `NBA Home Win % vs Altitude <br> 2008 - 2015 Seasons`,
       },
       xaxis: {
         range: [0.4, 0.75],
@@ -488,7 +491,7 @@ function nba_maps() {
         }
       }
     
-      for (let j = 0; j < 30; j++) {
+      for (let j = 0; j < 29; j++) {
           let nba_teams = [
             {
               name: nba_team_names[j],
@@ -521,7 +524,7 @@ function nba_maps() {
               color: "white",
               fillColor: color,
               radius: nba_teams[i].altitude_multiplier
-            }).bindPopup("<h3>" + nba_teams[i].name + "</h3> <h4> NBA: " + nba_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + nba_teams[i].altitude + " feet</h5>").addTo(League_map);
+            }).bindPopup("<h3>" + nba_teams[i].name + "</h3> <h4> NBA: " + nba_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + nba_teams[i].altitude + " ft</h5>").addTo(League_map);
           }
         }  
     });
@@ -545,8 +548,8 @@ function mlb_graphs() {
         eval("var Team_win_array_mlb"+i+"=[data.home_win_pct_1["+i+"]*1 + data.home_win_pct_2["+i+"]*1 + data.home_win_pct_3["+i+"]*1 + data.home_win_pct_4["+i+"]*1 + data.home_win_pct_5["+i+"]*1]/5");
         eval("Team_win_array.push(Team_win_array_mlb"+i+".toFixed(4))");
         eval("var mc_mlb"+i+"=monteCarlo(10000, Team_win_array_mlb"+i+", 81)");
-        eval("mc_mean.push(mc_mlb"+i+".Mean)");
-        eval("mc_std.push((mc_mlb"+i+".Std.toFixed(4))*1.96)");
+        eval("mc_mean.push(mc_mlb"+i+".Mean.toFixed(3))");
+        eval("mc_std.push(((mc_mlb"+i+".Std.toFixed(4))*1.96).toFixed(3))");
         // eval("MLB_array.push(Team_win_array_mlb"+i+")");
         eval("MLB_array.push(mc_mlb"+i+".Mean)");
         eval("MLB_altitude.push(data.altitude["+i+"]*1)");
@@ -579,7 +582,7 @@ function mlb_graphs() {
     let mlb_box_layout = {
       showlegend: false,
       range: [0.4, 0.75],
-      title: 'Simulated Home Win % Confidence Intervals',
+      title: 'Simulated Home Win % Confidence Intervals <br> 2008 - 2015 Seasons',
       margin: {
         l: 150,
         r: 50,
@@ -617,7 +620,7 @@ function mlb_graphs() {
 
     let layout_mlb={
       title: { 
-        text: `MLB Home Win % vs Altitude`,
+        text: `MLB Home Win % vs Altitude <br> 2008 - 2015 Seasons`,
       },
       xaxis: {
         range: [0.4, 0.75],
@@ -725,7 +728,7 @@ function mlb_maps() {
             color: "white",
             fillColor: color,
             radius: mlb_teams[i].altitude_multiplier
-          }).bindPopup("<h3>" + mlb_teams[i].name + "</h3> <h4> MLB: " + mlb_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + mlb_teams[i].altitude + " feet</h5>").addTo(League_map);
+          }).bindPopup("<h3>" + mlb_teams[i].name + "</h3> <h4> MLB: " + mlb_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + mlb_teams[i].altitude + " ft</h5>").addTo(League_map);
         }
       }
   });
@@ -749,8 +752,8 @@ function nfl_graphs() {
       eval("var Team_win_array_nfl"+i+"=[data.home_win_pct_1["+i+"]*1 + data.home_win_pct_2["+i+"]*1 + data.home_win_pct_3["+i+"]*1 + data.home_win_pct_4["+i+"]*1 + data.home_win_pct_5["+i+"]*1]/5");
       eval("Team_win_array.push(Team_win_array_nfl"+i+".toFixed(4))");
       eval("var mc_nfl"+i+"=monteCarlo(10000, Team_win_array_nfl"+i+", 8)");
-      eval("mc_mean.push(mc_nfl"+i+".Mean)");
-      eval("mc_std.push((mc_nfl"+i+".Std.toFixed(4))*1.96)");
+      eval("mc_mean.push(mc_nfl"+i+".Mean.toFixed(3))");
+      eval("mc_std.push(((mc_nfl"+i+".Std.toFixed(4))*1.96).toFixed(3))");
       // eval("NFL_array.push(Team_win_array_nfl"+i+")");
       eval("NFL_array.push(mc_nfl"+i+".Mean)");
       eval("NFL_altitude.push(data.altitude["+i+"]*1)");
@@ -783,7 +786,7 @@ function nfl_graphs() {
     let nfl_box_layout = {
       showlegend: false,
       range: [0.4, 0.75],
-      title: 'Simulated Home Win % Confidence Intervals',
+      title: 'Simulated Home Win % Confidence Intervals <br> 2008 - 2015 Seasons',
       margin: {
         l: 150,
         r: 50,
@@ -821,7 +824,7 @@ function nfl_graphs() {
 
     let layout_nfl={
       title: { 
-        text: `NFL Home Win % vs Altitude`,
+        text: `NFL Home Win % vs Altitude <br> 2008 - 2015 Seasons`,
       },
       xaxis: {
         range: [0.4, 0.75],
@@ -931,7 +934,7 @@ function nfl_maps() {
             color: "white",
             fillColor: color,
             radius: nfl_teams[i].altitude_multiplier
-          }).bindPopup("<h3>" + nfl_teams[i].name + "</h3> <h4> NFL: " + nfl_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + nfl_teams[i].altitude + " feet</h5>").addTo(League_map);
+          }).bindPopup("<h3>" + nfl_teams[i].name + "</h3> <h4> NFL: " + nfl_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + nfl_teams[i].altitude + " ft</h5>").addTo(League_map);
         }
       }     
   });
@@ -955,8 +958,8 @@ function nhl_graphs() {
         eval("var Team_win_array_nhl"+i+"=[data.home_win_pct_1["+i+"]*1 + data.home_win_pct_2["+i+"]*1 + data.home_win_pct_3["+i+"]*1 + data.home_win_pct_4["+i+"]*1 + data.home_win_pct_5["+i+"]*1]/5");
         eval("Team_win_array.push(Team_win_array_nhl"+i+".toFixed(4))");
         eval("var mc_nhl"+i+"=monteCarlo(10000, Team_win_array_nhl"+i+", 41)");
-        eval("mc_mean.push(mc_nhl"+i+".Mean)");
-        eval("mc_std.push((mc_nhl"+i+".Std.toFixed(4))*1.96)");
+        eval("mc_mean.push(mc_nhl"+i+".Mean.toFixed(3))");
+        eval("mc_std.push(((mc_nhl"+i+".Std.toFixed(4))*1.96).toFixed(3))");
         // eval("NHL_array.push(Team_win_array_nhl"+i+")");
         eval("NHL_array.push(mc_nhl"+i+".Mean)");
         eval("NHL_altitude.push(data.altitude["+i+"]*1)");
@@ -989,7 +992,7 @@ function nhl_graphs() {
     let nhl_box_layout = {
       showlegend: false,
       range: [0.4, 0.75],
-      title: 'Simulated Home Win % Confidence Interval',
+      title: 'Simulated Home Win % Confidence Interval <br> 2008 - 2015 Seasons',
       margin: {
         l: 150,
         r: 50,
@@ -1027,7 +1030,7 @@ function nhl_graphs() {
 
     let layout_nhl={
       title: { 
-        text: `NHL Home Win % vs Altitude`,
+        text: `NHL Home Win % vs Altitude <br> 2008 - 2015 Seasons`,
       },
       xaxis: {
         range: [0.4, 0.75],
@@ -1094,11 +1097,11 @@ function nhl_maps() {
         else if (nhl_altitude[i] < 500) {
           nhl_altitude_multiplier.push(nhl_altitude[i]*300);
         }
-        else if (nhl_altitude[i] < 1000) {
+        else if (nhl_altitude[i] < 1500) {
           nhl_altitude_multiplier.push(nhl_altitude[i]*250);
         }
         else if (nhl_altitude[i] < 3000) {
-          nhl_altitude_multiplier.push(nhl_altitude[i]*250);
+          nhl_altitude_multiplier.push(nhl_altitude[i]*165);
         }
         else {
           nhl_altitude_multiplier.push(nhl_altitude[i]*125);
@@ -1138,7 +1141,7 @@ function nhl_maps() {
               color: "white",
               fillColor: color,
               radius: nhl_teams[i].altitude_multiplier
-            }).bindPopup("<h3>" + nhl_teams[i].name + "</h3> <h4> NHL: " + nhl_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + nhl_teams[i].altitude + " feet</h5>").addTo(League_map);
+            }).bindPopup("<h3>" + nhl_teams[i].name + "</h3> <h4> NHL: " + nhl_teams[i].stadium_name + "</h4> <hr> <h5>Altitude: " + nhl_teams[i].altitude + " ft</h5>").addTo(League_map);
           }
         }
     })
@@ -1245,7 +1248,7 @@ function option_Team(different_selection){
     // Adds team data to the panel
     d3.select(".panel-title").text(`Stats for: ${data.team}`);
     d3.select("#option-data").append("h5").text(`League: ${data.league}`);
-    d3.select("#option-data").append("h5").text(`Altitude: ${data.altitude} feet`);
+    d3.select("#option-data").append("h5").text(`Altitude: ${data.altitude} ft`);
     d3.select("#option-data").append("h5").text(`Win Pct: ${((team_wins)*100).toFixed(2)}%`);
     d3.select("#option-data").append("h5").text(`Home Win Pct: ${((team_home_wins)*100).toFixed(2)}%`);
     // d3.select("#option-data").append("h5").text(`Home Win Pct vs Similar Opponents: ${((team_home_opp_wins)*100).toFixed(2)}%`);
@@ -1254,25 +1257,25 @@ function option_Team(different_selection){
     if (league_set=="NBA") {
       // sim_ref = NBA_mc_ref[0].team.indexOf(different_selection);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((NBA_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NBA_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NBA_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(NBA_array, NBA_altitude)).toFixed(2)}`);
     }
     else if (league_set=="NFL") {
       // sim_ref = NFL_mc_ref[0].team.indexOf(different_selection);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((NFL_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NFL_altitude.reduce(function(a ,b){ return a + b }))/32).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NFL_altitude.reduce(function(a ,b){ return a + b }))/32).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(NFL_array, NFL_altitude)).toFixed(2)}`);
     }
     else if (league_set=="MLB") {
       // sim_ref = MLB_mc_ref[0].team.indexOf(different_selection);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((MLB_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((MLB_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((MLB_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(MLB_array, MLB_altitude)).toFixed(2)}`);
     }
     else {
       // sim_ref = NHL_mc_ref[0].team.indexOf(different_selection);
       // d3.select("#option-data").append("h5").text(`Simulated Home Win %: ${((NHL_mc_ref[0].mc[sim_ref])*100).toFixed(2)}%`);
-      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NHL_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} feet`);
+      d3.select("#option-data").append("h5").text(`Average League Altitude: ${((NHL_altitude.reduce(function(a ,b){ return a + b }))/30).toFixed(0)} ft`);
       d3.select("#option-data").append("h5").text(`League Correlation for Home Win Pct vs Altitude: ${(pcorr(NHL_array, NHL_altitude)).toFixed(2)}`);
     };
 
