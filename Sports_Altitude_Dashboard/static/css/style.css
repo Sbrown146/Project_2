@@ -22,6 +22,7 @@ body {
   position: relative;
   height: inherit; 
   width: inherit;
+  margin: 0 auto 35px auto;
   
 }
 #graph1 {
