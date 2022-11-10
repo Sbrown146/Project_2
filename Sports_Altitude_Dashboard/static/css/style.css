@@ -19,7 +19,7 @@ body {
 }
 
 #map {
-  position: relative;
+  /* position: relative; */
   height: inherit; 
   width: inherit;
   margin: 0 auto 35px auto;
