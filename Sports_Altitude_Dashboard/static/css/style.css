@@ -15,14 +15,14 @@ body {
   position: relative;
   height: 500px;
   width: 1000px;
-  margin-bottom: 30px;
-  margin-left: 175px;
+  margin: 0 auto 35px auto;
 }
 
 #map {
   position: relative;
   height: inherit; 
   width: inherit;
+  
 }
 #graph1 {
   margin-bottom: 30px;
